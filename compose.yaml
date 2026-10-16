@@ -1,0 +1,25 @@
+services:
+  cfdata:
+    build:
+      context: .
+      args:
+        APK_MIRROR: ${APK_MIRROR:-}
+    image: cf-select:local
+    restart: unless-stopped
+    env_file: .env
+    ports:
+      - "${LAN_BIND_IP:-127.0.0.1}:${WEB_PORT:-13335}:${WEB_PORT:-13335}"
+    volumes:
+      - ./data:/data
+    mem_limit: ${MEMORY_LIMIT:-256m}
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "2"
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import socket,os; s=socket.create_connection(('127.0.0.1',int(os.getenv('WEB_PORT','13335'))),3); s.close()"]
+      start_period: 45s
+      interval: 60s
+      timeout: 5s
+      retries: 3

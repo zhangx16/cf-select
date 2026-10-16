@@ -1,0 +1,9 @@
+.git/
+.env
+data/
+data-desktop/
+desktop/
+pc-tools/
+tests/
+**/__pycache__/
+*.pyc
